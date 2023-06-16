@@ -1,0 +1,17 @@
+# Changes here will be overwritten by Copier
+_commit: 5632a71
+_src_path: /home/noirbizarre/Workspaces/copier.templates/python.copier
+author_email: noirbizarre@gmail.com
+author_fullname: Axel Haustant
+author_username: noirbizarre
+copyright_license: MIT License
+project_description: Provide a gitconfig sandbox for testing
+project_name: pytest-gitconfig
+project_slug: pytest-gitconfig
+python_distribution: pytest-gitconfig
+python_package: pytest_gitconfig
+repository_name: pytest-gitconfig
+repository_namespace: noirbizarre
+repository_provider: github.com
+
+# End
