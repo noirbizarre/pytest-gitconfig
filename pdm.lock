@@ -371,7 +371,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 lock_version = "4.2"
 cross_platform = true
 groups = ["default", "lint", "release", "test", "tox"]
-content_hash = "sha256:3c683a14cdce59b4eb3a2418433f9a1463e1ed30256e6fff951599515410b27a"
+content_hash = "sha256:7eed67493a8a448a5de11d775fd8019a8c1f1a1dbef9e78856b471c161213770"
 
 [metadata.files]
 "argcomplete 3.0.8" = [

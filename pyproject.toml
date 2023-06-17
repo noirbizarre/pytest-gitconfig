@@ -23,18 +23,18 @@ classifiers = [
     "Typing :: Typed",
 ]
 
-dependencies = []
-[project.optional-dependencies]
-
+dependencies = [
+    "pytest>=7.1.2",
+]
 [project.urls]
 Homepage = "https://github.com/noirbizarre/pytest-gitconfig"
-Documentation = "https://pytest-gitconfig.rtfd.io"
+Documentation = "https://github.com/noirbizarre/pytest-gitconfig#readme"
 Repository = "https://github.com/noirbizarre/pytest-gitconfig"
 Issues = "https://github.com/noirbizarre/pytest-gitconfig/issues"
 
 
 [project.entry-points.pytest11]
-myplugin = "pytest_gitconfig.plugin"
+gitconfig = "pytest_gitconfig.plugin"
 
 
 [build-system]
@@ -50,7 +50,6 @@ write_template = '__version__ = "{}"'
 
 [tool.pdm.dev-dependencies]
 test = [
-    "pytest>=7.1.2",
     "pytest-sugar>=0.9.5",
     "pytest-cov>=3.0.0",
 ]
