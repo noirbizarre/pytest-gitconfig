@@ -42,12 +42,6 @@ repos:
       - id: commitizen
         additional_dependencies:
           - emotional
-      - id: commitizen-branch
-        additional_dependencies:
-          - emotional
-        stages:
-          - post-commit
-          - push
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.23.1
