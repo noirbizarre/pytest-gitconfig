@@ -9,8 +9,8 @@ from typing import Any, Iterator
 
 import pytest
 
-DEFAULT_GIT_USER_NAME = "John Doe"
-DEFAULT_GIT_USER_EMAIL = "john.doe@local.dev"
+DEFAULT_GIT_USER_NAME = "Pytest"
+DEFAULT_GIT_USER_EMAIL = "pytest@local.dev"
 DEFAULT_GIT_BRANCH = "main"
 
 
