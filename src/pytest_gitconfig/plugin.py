@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import os
-import shlex
-import subprocess
 
 from configparser import ConfigParser
 from dataclasses import dataclass
@@ -14,11 +12,6 @@ import pytest
 DEFAULT_GIT_USER_NAME = "John Doe"
 DEFAULT_GIT_USER_EMAIL = "john.doe@local.dev"
 DEFAULT_GIT_BRANCH = "main"
-
-
-def run(cmd: str, *args, **kwargs) -> subprocess.CompletedProcess[str]:
-    real_args = [cmd, *args] if args else shlex.split(cmd)
-    return subprocess.run(real_args, **kwargs)
 
 
 @pytest.fixture(scope="session")
