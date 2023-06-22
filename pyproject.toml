@@ -52,7 +52,7 @@ write_template = '__version__ = "{}"'
 [tool.pdm.dev-dependencies]
 test = [
     "pytest-sugar>=0.9.5",
-    "pytest-cov>=3.0.0",
+    "coverage[toml]>=4",
 ]
 lint = [
     "black>=23.3.0",
@@ -88,16 +88,12 @@ typing.cmd = "mypy src tests --warn-unused-ignores"
 cover.help = "Run the test suite with coverage"
 pre_cover = "coverage erase"
 cover.composite = [
-  """
-  test
-    --cov
-    --cov-report=term
-    --cov-report=html:reports/coverage
-    --cov-report=xml:reports/coverage.xml
-    --no-cov-on-fail
-    --junitxml=reports/tests.xml
-  """
+  "coverage run --append -m pytest {args} --junitxml=reports/tests.xml",
+  "coverage report",
+  "coverage html -d reports/coverage",
+  "coverage xml -o reports/coverage.xml",
 ]
+cover.env = {COV_CORE_SOURCE="src"}
 
 "cover:all".help = "Run the test suite against all supported Python version"
 "pre_cover:all" = "coverage erase"
@@ -130,11 +126,18 @@ testpaths = [
 
 
 [tool.coverage.run]
-source = ["src"]
+source = ["src/"]
 branch = true
 omit = [
   "tests/*",
 ]
+
+[tool.coverage.report]
+exclude_also = [
+  'def __repr__',
+  'if TYPE_CHECKING:',
+]
+ignore_errors = true
 
 
 [tool.black]
