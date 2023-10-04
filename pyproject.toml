@@ -45,8 +45,7 @@ build-backend = "pdm.backend"
 
 [tool.pdm.version]
 source = "scm"
-write_to = "src/pytest_gitconfig/_version.py"
-write_template = '__version__ = "{}"'
+write_to = "pytest_gitconfig/VERSION"
 
 
 [tool.pdm.dev-dependencies]
