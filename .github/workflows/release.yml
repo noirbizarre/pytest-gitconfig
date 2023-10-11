@@ -39,7 +39,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up PDM
+        uses: pdm-project/setup-pdm@v3
+        with:
+          python-version: "3.11"
+          cache: true
+
       - name: Bump using commitizen
+        id: commitizen
         uses: commitizen-tools/commitizen-action@master
         with:
           github_token: ${{ github.token }}
@@ -59,8 +66,16 @@ jobs:
           trigger_workflow: true
           wait_workflow: true
 
+      - name: Build artifacts
+        run: pdm build
+
       - name: Github Release
+        id: github-release
         uses: softprops/action-gh-release@v1
         with:
           body_path: "body.md"
           tag_name: ${{ env.REVISION }}
+          files: dist/*
+
+      - name: Publish on PyPI
+        run: pdm publish --no-build
