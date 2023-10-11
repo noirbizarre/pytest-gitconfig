@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version
-from importlib.resources import files
+
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files  # type: ignore[no-redef]
 
 from .plugin import (
     DEFAULT_GIT_BRANCH,
