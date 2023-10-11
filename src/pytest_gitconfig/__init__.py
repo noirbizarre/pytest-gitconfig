@@ -5,7 +5,7 @@ from importlib.metadata import PackageNotFoundError, version
 try:
     from importlib.resources import files
 except ImportError:
-    from importlib_resources import files  # type: ignore[no-redef]
+    from importlib_resources import files  # type: ignore[no-redef,import-not-found]
 
 from .plugin import (
     DEFAULT_GIT_BRANCH,
