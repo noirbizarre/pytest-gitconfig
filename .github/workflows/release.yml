@@ -87,5 +87,5 @@ jobs:
           cat body.md >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub release: ${{ steps.github-release.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- GitHub release: ${{ steps.github-release.outputs.url }}" >> $GITHUB_STEP_SUMMARY
           echo "- PyPI release: https://pypi.org/project/pytest-gitconfig/${REVISION}/" >> $GITHUB_STEP_SUMMARY
