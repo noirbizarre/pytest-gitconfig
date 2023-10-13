@@ -72,3 +72,4 @@ repos:
       additional_dependencies:
         - tomli
       args: ["--write-changes"]
+      exclude: CHANGELOG\.md
