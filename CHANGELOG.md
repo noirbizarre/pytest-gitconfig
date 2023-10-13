@@ -1,5 +1,22 @@
 # Changelog
 
+## 🚀 0.4.0 (2023-10-13)
+
+### 🐛 Bug fixes
+
+- **version**: update versionning to support `pdm` 2.8+
+- support pre Python 3.9 importlib.resources.files
+
+### 📖 Documentation
+
+- **README**: improve typing and add some examples
+
+### 📦 Build
+
+- update CI/lint dependencies
+- drop support for Python 3.7 and add Python 3.12
+- update dependencies
+
 ## 🚀 0.2.0 (2023-06-22)
 
 ### 📖 Documentation
