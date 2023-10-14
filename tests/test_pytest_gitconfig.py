@@ -4,17 +4,28 @@ import os
 import subprocess
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 from pytest_gitconfig import GitConfig
 
+_GIT_CONFIG = ["git", "config", "--global"]
 
-def assert_config(key: str, expected: str):
+
+def get_config(key: str) -> str | None:
     __tracebackhide__ = True
-    assert (
-        subprocess.check_output(f"git config {key}", shell=True).strip().decode("utf-8") == expected
-    )
+    try:
+        return subprocess.check_output([*_GIT_CONFIG, key]).strip().decode("utf-8")
+    except subprocess.CalledProcessError as e:
+        if e.returncode == 1:
+            return None
+        raise
+
+
+def set_config(key: str, value: Any):
+    __tracebackhide__ = True
+    subprocess.call([*_GIT_CONFIG, key, value])
 
 
 @pytest.mark.mypy_testing
@@ -25,8 +36,10 @@ def test_gitconfig(gitconfig: GitConfig):
 
 
 @pytest.mark.mypy_testing
-def test_gitconfig_get_existing(gitconfig: GitConfig, git_user_name: str):
-    assert gitconfig.get("user.name") == git_user_name
+def test_gitconfig_get_existing(gitconfig: GitConfig):
+    username = "John Doe"
+    set_config("user.name", username)
+    assert gitconfig.get("user.name") == username
 
 
 @pytest.mark.mypy_testing
@@ -50,31 +63,54 @@ def test_gitconfig_get_bad_key(gitconfig: GitConfig):
 
 @pytest.mark.mypy_testing
 def test_gitconfig_set_dotted_kwargs(gitconfig: GitConfig):
-    expected = "new name"
-    gitconfig.set(**{"user.name": expected})
+    expected = "expected"
+    gitconfig.set(**{"test.dottedKwargs": expected})
 
-    assert_config("user.name", expected)
+    assert get_config("test.dottedKwargs") == expected
 
 
 @pytest.mark.mypy_testing
 def test_gitconfig_set_dict_kwargs(gitconfig: GitConfig):
-    expected = "new name"
-    gitconfig.set(user={"name": expected})
+    expected = "expected"
+    gitconfig.set(test={"dictKwargs": expected})
 
-    assert_config("user.name", expected)
+    assert get_config("test.dictKwargs") == expected
 
 
 @pytest.mark.mypy_testing
 def test_gitconfig_set_dict(gitconfig: GitConfig):
-    expected = "new name"
-    gitconfig.set({"user.name": expected})
+    expected = "expected"
+    gitconfig.set({"test.dottedDict": expected})
 
-    assert_config("user.name", expected)
+    assert get_config("test.dottedDict") == expected
 
 
 @pytest.mark.mypy_testing
 def test_gitconfig_set_nested_dicts(gitconfig: GitConfig):
     expected = "new name"
-    gitconfig.set({"user": {"name": expected}})
+    gitconfig.set({"test": {"nestedDicts": expected}})
 
-    assert_config("user.name", expected)
+    assert get_config("test.nestedDicts") == expected
+
+
+@pytest.mark.mypy_testing
+def test_gitconfig_override_existing_value(gitconfig: GitConfig):
+    expected = "new name"
+    initial = get_config("user.name")
+    path = str(gitconfig)
+    assert initial != expected
+    with gitconfig.override({"user.name": expected}) as gitcfg:
+        assert get_config("user.name") == expected
+        assert str(gitcfg) == path
+    assert get_config("user.name") == initial
+
+
+@pytest.mark.mypy_testing
+def test_gitconfig_override_new_value(gitconfig: GitConfig):
+    expected = "expected"
+    assert get_config("some.key") is None
+    path = str(gitconfig)
+    with gitconfig.override({"some.key": expected}) as gitcfg:
+        assert get_config("some.key") == expected
+        assert str(gitcfg) == path
+    assert get_config("some.key") is None

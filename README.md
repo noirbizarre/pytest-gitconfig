@@ -50,9 +50,35 @@ def fixture_depending_on_gitconfig(gitconfig: GitConfig) -> Whatever:
     gitconfig.set(**{"some.key": value})  # kwargs with dotted keys form
     # Or read them
     data = gitconfig.get("some.key")
+    data = gitconfig.get("some.key", "fallback")
     # If you need the path to the gitconfig file
     GIT_CONFIG_GLOBAL = str(gitconfig)
     return whatever
+```
+
+Note that the `gitconfig` fixture being session-scoped (avoiding the performance hit of creating a gitconfig file for each test),
+set values are persistent for the whole session and should be defined once preferably in your `conftest.py`.
+But if you need to temporarily override some value, you can use the `override()` context manager which is accepting the same parameters as `set()`.
+
+This allows to define a fixture with another scope or to override it directly during a test:
+
+```python
+from __future__ import annotations
+from typing import TYPE_CHECKING, Iterator
+
+if TYPE_CHECKING:
+  from pytest_gitconfig import GitConfig
+
+@pytest.fixture(scope="module")
+def gitconfig(gitconfig: GitConfig) -> Iterator[GitConfig]:
+    # Define a gitconfig values for the module
+    with gitconfig.override({"some.key": value}):
+        yield gitconfig
+
+
+def test_something(gitconfig):
+    with gitconfig.override({"other.key": value}):
+        # Do something depending on those overridden values
 ```
 
 ## Provided fixtures
@@ -73,6 +99,7 @@ The fixture when required provide a `pytest_gitconfig.GitConfig` object with the
 
 - `gitconfig.set()` accepting either a `dict` or kwargs, as parsed data sections as dict or dotted-key-values.
 - `gitconfig.get()` to get a setting given its dotted key. Get a 2nd default value. Raise `KeyError` if config does not exists and `default` is not provided
+- `gitconfig.override()` a context manager setting the values and restoring them on exit
 
 It works by monkeypatching the `GIT_CONFIG_GLOBAL` environment variable.
 So, if you rely on this in a context where `os.environ` is ignored, you should patch it yourself using this fixture.

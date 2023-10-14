@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 
 from configparser import ConfigParser
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterator, Mapping, overload
@@ -14,6 +15,7 @@ DEFAULT_GIT_USER_EMAIL = "pytest@local.dev"
 DEFAULT_GIT_BRANCH = "main"
 
 _UNSET = object()
+DELETE = object()
 
 
 @pytest.fixture(scope="session")
@@ -57,7 +59,10 @@ class GitConfig:
         for section, option, value in self._iter_data(data or kwargs):
             if not cfg.has_section(section):
                 cfg.add_section(section)
-            cfg.set(section, option, value)
+            if value is DELETE:
+                cfg.remove_option(section, option)
+            else:
+                cfg.set(section, option, value)
         self._write(cfg)
 
     def get(self, key: str, default: Any = _UNSET) -> str:
@@ -65,10 +70,21 @@ class GitConfig:
         section, option = self._parse_key(key)
         try:
             return cfg[section][option]
-        except KeyError:
+        except KeyError as e:
             if default is _UNSET:
-                raise
+                raise KeyError(f"Key {section}.{option} not found in git config") from e
             return default
+
+    @contextmanager
+    def override(self, data: Mapping[str, Any] | None = None, **kwargs: Any) -> Iterator[GitConfig]:
+        data = data or kwargs
+        keys = {f"{section}.{option}" for section, option, _ in self._iter_data(data)}
+        backup = {key: self.get(key, DELETE) for key in keys}
+        self.set(data)
+        try:
+            yield self
+        finally:
+            self.set(backup)
 
     def _iter_data(self, data: Mapping[str, Any]) -> Iterator[tuple[str, str, str]]:
         for key, content in data.items():
@@ -118,6 +134,6 @@ def gitconfig(
         "init.defaultBranch": git_init_default_branch,
     }
 
-    gitconfig.set(**settings)
+    gitconfig.set(settings)
 
     return gitconfig
