@@ -6,7 +6,7 @@ groups = ["default", "lint", "release", "test", "tox"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:e09ba0096e7c481baa1cd487f7d8afcb83a1c00fb656a536ee501e515d21448e"
+content_hash = "sha256:a028867e161503f2d79aee45d677ccdcacb825ab98379e2977cc19a49af51651"
 
 [[package]]
 name = "argcomplete"
@@ -653,6 +653,20 @@ dependencies = [
 files = [
     {file = "pytest-7.4.2-py3-none-any.whl", hash = "sha256:1d881c6124e08ff0a1bb75ba3ec0bfd8b5354a01c194ddd5a0a870a48d99b002"},
     {file = "pytest-7.4.2.tar.gz", hash = "sha256:a766259cfab564a2ad52cb1aae1b881a75c3eb7e34ca3779697c23ed47c47069"},
+]
+
+[[package]]
+name = "pytest-mypy-testing"
+version = "0.1.1"
+requires_python = ">=3.7"
+summary = "Pytest plugin to check mypy output."
+dependencies = [
+    "mypy>=0.931",
+    "pytest<8,>=7",
+]
+files = [
+    {file = "pytest-mypy-testing-0.1.1.tar.gz", hash = "sha256:31b1b8ec869b2029b2e15ba9913c7dc089b6197626efd559d6e3c5e763a0725e"},
+    {file = "pytest_mypy_testing-0.1.1-py3-none-any.whl", hash = "sha256:2c10a079e4333550f648e66e1ab7ab5fc53f7791a690584abba549398e3441d7"},
 ]
 
 [[package]]

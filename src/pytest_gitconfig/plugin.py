@@ -5,7 +5,7 @@ import os
 from configparser import ConfigParser
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, Mapping, overload
 
 import pytest
 
@@ -42,26 +42,37 @@ class GitConfig:
     def __str__(self):
         return str(self.path)
 
-    def set(self, data: dict | None = None, **kwargs):
+    @overload
+    def set(self, data: Mapping[str, Any]):
+        ...
+
+    @overload
+    def set(self, **kwargs: Any):
+        ...
+
+    def set(self, data: Mapping[str, Any] | None = None, **kwargs: Any):
         cfg = self._read()
-        if data:
-            for section, options in data.items():
-                for option, value in options.items():
-                    if not cfg.has_section(section):
-                        cfg.add_section(section)
-                    cfg.set(section, option, value)
-        else:
-            for key, value in kwargs.items():
-                section, option = self._parse_key(key)
-                if not cfg.has_section(section):
-                    cfg.add_section(section)
-                cfg.set(section, option, value)
+        for section, option, value in self._iter_data(data or kwargs):
+            if not cfg.has_section(section):
+                cfg.add_section(section)
+            cfg.set(section, option, value)
         self._write(cfg)
 
     def get(self, key) -> str:
         cfg = self._read()
         section, option = self._parse_key(key)
         return cfg[section][option]
+
+    def _iter_data(self, data: Mapping[str, Any]) -> Iterator[tuple[str, str, str]]:
+        for key, content in data.items():
+            if "." in key:
+                # Dotted key
+                section, option = key.split(".", 1)
+                yield section, option, content
+            else:
+                # Nested dicts
+                for option, value in content.items():
+                    yield key, option, value
 
     def _parse_key(self, key: str) -> list[str]:
         return key.rsplit(".", 1)

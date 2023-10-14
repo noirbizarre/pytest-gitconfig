@@ -51,8 +51,9 @@ write_to = "pytest_gitconfig/VERSION"
 
 [tool.pdm.dev-dependencies]
 test = [
-    "pytest-sugar>=0.9.5",
     "coverage[toml]>=4",
+    "pytest-sugar>=0.9.5",
+    "pytest-mypy-testing>=0.1.1",
 ]
 lint = [
     "black>=23.3.0",

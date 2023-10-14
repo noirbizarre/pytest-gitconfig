@@ -43,11 +43,13 @@ def git_user_name() -> str:
 
 @pytest.fixture
 def fixture_depending_on_gitconfig(gitconfig: GitConfig) -> Whatever:
-    # You can set values
-    gitconfig.set(group={key: value})  # nested key-value form
-    gitconfig.set(**{"othersome.key": True})  # dotted keys form
+    # You can set values, the 4 following statements are equivalents
+    gitconfig.set({"some": {key: value}}) # nested dicts form
+    gitconfig.set(some={key: value})      # dicts as kwargs form
+    gitconfig.set({"some.key": value})    # dict with dotted keys form
+    gitconfig.set(**{"some.key": value})  # kwargs with dotted keys form
     # Or read them
-    data = gitconfig.get("path.to.key")
+    data = gitconfig.get("some.key")
     # If you need the path to the gitconfig file
     GIT_CONFIG_GLOBAL = str(gitconfig)
     return whatever
