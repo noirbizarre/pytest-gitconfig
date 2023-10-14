@@ -71,7 +71,7 @@ By default, it will set 3 settings:
 
 The fixture when required provide a `pytest_gitconfig.GitConfig` object with the following methods:
 
-- `gitconfig.set()` accepting either a `dict` with the parsed data sections or key-values with dotted key names.
+- `gitconfig.set()` accepting either a `dict` or kwargs, as parsed data sections as dict or dotted-key-values.
 - `gitconfig.get()` to get a setting given its dotted key.
 
 It works by monkeypatching the `GIT_CONFIG_GLOBAL` environment variable.
