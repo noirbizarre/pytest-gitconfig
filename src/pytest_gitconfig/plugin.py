@@ -13,6 +13,8 @@ DEFAULT_GIT_USER_NAME = "Pytest"
 DEFAULT_GIT_USER_EMAIL = "pytest@local.dev"
 DEFAULT_GIT_BRANCH = "main"
 
+_UNSET = object()
+
 
 @pytest.fixture(scope="session")
 def sessionpatch() -> Iterator[pytest.MonkeyPatch]:
@@ -58,10 +60,15 @@ class GitConfig:
             cfg.set(section, option, value)
         self._write(cfg)
 
-    def get(self, key) -> str:
+    def get(self, key: str, default: Any = _UNSET) -> str:
         cfg = self._read()
         section, option = self._parse_key(key)
-        return cfg[section][option]
+        try:
+            return cfg[section][option]
+        except KeyError:
+            if default is _UNSET:
+                raise
+            return default
 
     def _iter_data(self, data: Mapping[str, Any]) -> Iterator[tuple[str, str, str]]:
         for key, content in data.items():
@@ -75,6 +82,8 @@ class GitConfig:
                     yield key, option, value
 
     def _parse_key(self, key: str) -> list[str]:
+        if key.count(".") != 1:
+            raise ValueError("git config keys must be in the form of <section>.<option>")
         return key.rsplit(".", 1)
 
     def _read(self) -> ConfigParser:

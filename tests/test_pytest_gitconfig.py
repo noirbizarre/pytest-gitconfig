@@ -25,6 +25,30 @@ def test_gitconfig(gitconfig: GitConfig):
 
 
 @pytest.mark.mypy_testing
+def test_gitconfig_get_existing(gitconfig: GitConfig, git_user_name: str):
+    assert gitconfig.get("user.name") == git_user_name
+
+
+@pytest.mark.mypy_testing
+@pytest.mark.parametrize("key", ("user.notfound", "not.found"), ids=("section", "option"))
+def test_gitconfig_get_missing_without_fallback(gitconfig: GitConfig, key: str):
+    with pytest.raises(KeyError):
+        gitconfig.get(key)
+
+
+@pytest.mark.mypy_testing
+@pytest.mark.parametrize("key", ("user.notfound", "not.found"), ids=("section", "option"))
+def test_gitconfig_get_missing_with_fallback(gitconfig: GitConfig, key: str):
+    assert gitconfig.get(key, "default") == "default"
+
+
+@pytest.mark.mypy_testing
+def test_gitconfig_get_bad_key(gitconfig: GitConfig):
+    with pytest.raises(ValueError):
+        gitconfig.get("notdotted")
+
+
+@pytest.mark.mypy_testing
 def test_gitconfig_set_dotted_kwargs(gitconfig: GitConfig):
     expected = "new name"
     gitconfig.set(**{"user.name": expected})

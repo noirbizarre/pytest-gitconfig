@@ -72,7 +72,7 @@ By default, it will set 3 settings:
 The fixture when required provide a `pytest_gitconfig.GitConfig` object with the following methods:
 
 - `gitconfig.set()` accepting either a `dict` or kwargs, as parsed data sections as dict or dotted-key-values.
-- `gitconfig.get()` to get a setting given its dotted key.
+- `gitconfig.get()` to get a setting given its dotted key. Get a 2nd default value. Raise `KeyError` if config does not exists and `default` is not provided
 
 It works by monkeypatching the `GIT_CONFIG_GLOBAL` environment variable.
 So, if you rely on this in a context where `os.environ` is ignored, you should patch it yourself using this fixture.
