@@ -1,5 +1,15 @@
 # Changelog
 
+## 🚀 0.5.0 (2023-10-14)
+
+### 💫 New features
+
+- **set**: handle dict with dotted keys as `GitConfig.set()` parameter
+
+### 📖 Documentation
+
+- **README**: improve `gitconfig.set()` documentation
+
 ## 🚀 0.4.0 (2023-10-13)
 
 ### 🐛 Bug fixes
