@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterator, Mapping, overload
+from typing import Any, Iterator, Mapping
 
 import pytest
 
@@ -62,17 +62,9 @@ class GitConfig:
     def __str__(self):
         return str(self.path)
 
-    @overload
     def set(self, data: Mapping[str, Any]):
-        ...
-
-    @overload
-    def set(self, **kwargs: Any):
-        ...
-
-    def set(self, data: Mapping[str, Any] | None = None, **kwargs: Any):
         cfg = self._read()
-        for section, option, value in self._iter_data(data or kwargs):
+        for section, option, value in self._iter_data(data):
             if not cfg.has_section(section):
                 cfg.add_section(section)
             if value is DELETE:
@@ -92,8 +84,7 @@ class GitConfig:
             return default
 
     @contextmanager
-    def override(self, data: Mapping[str, Any] | None = None, **kwargs: Any) -> Iterator[GitConfig]:
-        data = data or kwargs
+    def override(self, data: Mapping[str, Any]) -> Iterator[GitConfig]:
         keys = {f"{section}.{option}" for section, option, _ in self._iter_data(data)}
         backup = {key: self.get(key, DELETE) for key in keys}
         self.set(data)

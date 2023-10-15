@@ -153,16 +153,16 @@ A `pytest.MonkeyPatch` session instance.
 
 An object materializing a given `gitconfig` file.
 
-#### `set(self, data: Mapping[str, Any] | None = None, **kwargs: Any)`
+#### `set(self, data: Mapping[str, Any])`
 
 Write some `gitconfig` values.
-It accepts either a `dict` or kwargs, as parsed data sections as dict or dotted-key-values.
+It accepts a `dict` of parsed data sections as dict or dotted-key-values.
 
 #### `get(self, key: str, default: Any = _UNSET)`
 
 Get a setting given its dotted key. Get a 2nd default value. Raise `KeyError` if config does not exists and `default` is not provided
 
-#### `override(self, data: Mapping[str, Any] | None = None, **kwargs: Any) -> Iterator[GitConfig]`
+#### `override(self, data: Mapping[str, Any]) -> Iterator[GitConfig]`
 
 A context manager setting the values and restoring them on exit.
 Accept the same format a the `set()` method.

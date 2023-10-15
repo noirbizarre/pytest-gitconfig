@@ -81,20 +81,6 @@ def test_gitconfig_get_bad_key(gitconfig: GitConfig):
         gitconfig.get("notdotted")
 
 
-def test_gitconfig_set_dotted_kwargs(gitconfig: GitConfig):
-    expected = "expected"
-    gitconfig.set(**{"test.dottedKwargs": expected})
-
-    assert get_config("test.dottedKwargs") == expected
-
-
-def test_gitconfig_set_dict_kwargs(gitconfig: GitConfig):
-    expected = "expected"
-    gitconfig.set(test={"dictKwargs": expected})
-
-    assert get_config("test.dictKwargs") == expected
-
-
 def test_gitconfig_set_dict(gitconfig: GitConfig):
     expected = "expected"
     gitconfig.set({"test.dottedDict": expected})
