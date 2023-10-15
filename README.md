@@ -21,14 +21,10 @@ pipenv install pytest-gitconfig
 pdm add pytest-gitconfig
 ```
 
-Then in your `conftest.py`:
+Then the `default_gitconfig` session fixture will be automatically loaded for the session
+providing isolation from gloval user defined values.
 
-```python
-# All tests are using the sandboxed gitconfig
-pytestmark = pytest.mark.usefixtures("gitconfig")
-```
-
-or if you want to customize or depend on it
+If you want to customize or depend on it
 
 ```python
 from __future__ import annotations
@@ -38,29 +34,27 @@ if TYPE_CHECKING:
   from pytest_gitconfig import GitConfig
 
 @pytest.fixture
-def git_user_name() -> str:
+def default_git_user_name() -> str:
   return "John Doe"
 
-@pytest.fixture
-def fixture_depending_on_gitconfig(gitconfig: GitConfig) -> Whatever:
-    # You can set values, the 4 following statements are equivalents
-    gitconfig.set({"some": {key: value}}) # nested dicts form
-    gitconfig.set(some={key: value})      # dicts as kwargs form
-    gitconfig.set({"some.key": value})    # dict with dotted keys form
-    gitconfig.set(**{"some.key": value})  # kwargs with dotted keys form
+@pytest.fixture(scope="session", autouse=True)
+def fixture_depending_on_default_gitconfig(default_gitconfig: GitConfig) -> Whatever:
+    # You can set values, the following statements are equivalents
+    default_gitconfig.set({"some": {key: value}}) # nested dicts form
+    default_gitconfig.set({"some.key": value})    # dict with dotted keys form
     # Or read them
-    data = gitconfig.get("some.key")
-    data = gitconfig.get("some.key", "fallback")
+    data = default_gitconfig.get("some.key")
+    data = default_gitconfig.get("some.key", "fallback")
     # If you need the path to the gitconfig file
-    GIT_CONFIG_GLOBAL = str(gitconfig)
+    assert str(default_gitconfig) == str(default_gitconfig.path)
     return whatever
 ```
 
-Note that the `gitconfig` fixture being session-scoped (avoiding the performance hit of creating a gitconfig file for each test),
+Note that the `default_gitconfig` fixture being session-scoped (avoiding the performance hit of creating a gitconfig file for each test),
 set values are persistent for the whole session and should be defined once preferably in your `conftest.py`.
 But if you need to temporarily override some value, you can use the `override()` context manager which is accepting the same parameters as `set()`.
 
-This allows to define a fixture with another scope or to override it directly during a test:
+This allows to override it directly during a test:
 
 ```python
 from __future__ import annotations
@@ -69,17 +63,37 @@ from typing import TYPE_CHECKING, Iterator
 if TYPE_CHECKING:
   from pytest_gitconfig import GitConfig
 
-@pytest.fixture(scope="module")
-def gitconfig(gitconfig: GitConfig) -> Iterator[GitConfig]:
-    # Define a gitconfig values for the module
-    with gitconfig.override({"some.key": value}):
-        yield gitconfig
 
-
-def test_something(gitconfig):
+def test_something(default_gitconfig):
     with gitconfig.override({"other.key": value}):
         # Do something depending on those overridden values
 ```
+
+But to test some value in some specific tests, its best to rely on `gitconfig` which is providing a function-scoped GitConfig:
+
+```python
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+  from pytest_gitconfig import GitConfig
+
+
+def test_something(gitconfig: GitConfig):
+    gitconfig.set({"other.key": value})  # Only valid for this test
+    # Do something depending on those overridden values
+```
+
+A classical setup being:
+
+- default to using the session-scoped `default_gitconfig` to ensure isolation.
+- some specific test cases relying on some specific settings set on the `gitconfig` function-scoped fixture
+
+This has the following benefits:
+
+- session isolation is done only once
+- test having specific settings does not impact other tests
+- test having specific settings can be run in parallel
 
 ## Provided fixtures
 
