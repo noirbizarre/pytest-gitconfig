@@ -30,9 +30,32 @@ def set_config(key: str, value: Any):
     subprocess.call([*_GIT_CONFIG, key, value])
 
 
-def test_gitconfig(gitconfig: GitConfig):
+def test_default_gitconfig_autouse():
+    assert os.environ["GIT_CONFIG_GLOBAL"] != str(Path("~/.gitconfig"))
+
+
+def test_default_gitconfig(default_gitconfig: GitConfig):
+    assert default_gitconfig.path != Path("~/.gitconfig")
+    assert str(default_gitconfig) == str(default_gitconfig.path)
+    assert os.environ["GIT_CONFIG_GLOBAL"] == str(default_gitconfig.path)
+
+
+def test_gitconfig(
+    gitconfig: GitConfig,
+    default_git_user_name: str,
+    default_git_user_email: str,
+    default_git_init_default_branch: str,
+):
     assert gitconfig.path != Path("~/.gitconfig")
     assert str(gitconfig) == str(gitconfig.path)
+    assert gitconfig.get("user.name") == default_git_user_name
+    assert gitconfig.get("user.email") == default_git_user_email
+    assert gitconfig.get("init.defaultBranch") == default_git_init_default_branch
+    assert os.environ["GIT_CONFIG_GLOBAL"] == str(gitconfig.path)
+
+
+def test_gitconfig_override_default_gitconfig(default_gitconfig: GitConfig, gitconfig: GitConfig):
+    assert default_gitconfig.path != gitconfig.path
     assert os.environ["GIT_CONFIG_GLOBAL"] == str(gitconfig.path)
 
 

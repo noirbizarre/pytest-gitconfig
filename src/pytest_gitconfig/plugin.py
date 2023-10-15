@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 
 from configparser import ConfigParser
 from contextlib import contextmanager
@@ -25,18 +26,33 @@ def sessionpatch() -> Iterator[pytest.MonkeyPatch]:
 
 
 @pytest.fixture(scope="session")
-def git_user_name() -> str:
+def default_git_user_name() -> str:
     return DEFAULT_GIT_USER_NAME
 
 
 @pytest.fixture(scope="session")
-def git_user_email() -> str:
+def default_git_user_email() -> str:
     return DEFAULT_GIT_USER_EMAIL
 
 
 @pytest.fixture(scope="session")
-def git_init_default_branch() -> str:
+def default_git_init_default_branch() -> str:
     return DEFAULT_GIT_BRANCH
+
+
+@pytest.fixture(scope="session")
+def git_user_name() -> str | None:
+    pass
+
+
+@pytest.fixture(scope="session")
+def git_user_email() -> str | None:
+    pass
+
+
+@pytest.fixture(scope="session")
+def git_init_default_branch() -> str | None:
+    pass
 
 
 @dataclass
@@ -112,13 +128,13 @@ class GitConfig:
             cfg.write(out)
 
 
-@pytest.fixture(scope="session")
-def gitconfig(
+@pytest.fixture(scope="session", autouse=True)
+def default_gitconfig(
     tmp_path_factory: pytest.TempPathFactory,
     sessionpatch: pytest.MonkeyPatch,
-    git_user_name: str,
-    git_user_email: str,
-    git_init_default_branch: str,
+    default_git_user_name: str,
+    default_git_user_email: str,
+    default_git_init_default_branch: str,
 ) -> GitConfig:
     path = tmp_path_factory.mktemp("git", False) / "config"
     gitconfig = GitConfig(path)
@@ -129,11 +145,42 @@ def gitconfig(
     sessionpatch.setenv("GIT_CONFIG_GLOBAL", str(gitconfig))
 
     settings: dict[str, Any] = {
-        "user.name": git_user_name,
-        "user.email": git_user_email,
-        "init.defaultBranch": git_init_default_branch,
+        "user.name": default_git_user_name,
+        "user.email": default_git_user_email,
+        "init.defaultBranch": default_git_init_default_branch,
     }
 
     gitconfig.set(settings)
+
+    return gitconfig
+
+
+@pytest.fixture
+def gitconfig(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    default_gitconfig: GitConfig,
+    git_user_name: str | None,
+    git_user_email: str | None,
+    git_init_default_branch: str | None,
+) -> GitConfig:
+    path = tmp_path / "gitconfig"
+    shutil.copy(default_gitconfig.path, path)
+    gitconfig = GitConfig(path)
+
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(gitconfig))
+
+    settings: dict[str, str] = {
+        k: v
+        for k, v in (
+            ("user.name", git_user_name),
+            ("user.email", git_user_email),
+            ("init.defaultBranch", git_init_default_branch),
+        )
+        if v is not None
+    }
+
+    if settings:
+        gitconfig.set(settings)
 
     return gitconfig

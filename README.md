@@ -83,11 +83,41 @@ def test_something(gitconfig):
 
 ## Provided fixtures
 
-All fixtures are session-scoped.
+### Function-scoped
 
-### `gitconfig -> pytest_gitconfig.GitConfig`
+#### `gitconfig -> pytest_gitconfig.GitConfig`
+
+This is the main fixture which is creating a new and clean git config file for the tested function.
+
+It inherit from `default_gitconfig` (meaning that all values set on `default_gitconfig` will be set on `gitconfig`)
+
+It works by monkeypatching the `GIT_CONFIG_GLOBAL` environment variable.
+So, if you rely on this in a context where `os.environ` is ignored, you should patch it yourself using this fixture.
+
+#### `git_user_name -> str | None`
+
+Provide the initial `user.name` setting for `gitconfig`.
+If `None`, `user.name` will inherit its value from `default_config`,
+so most probably from `default_git_user_name` if not overridden.
+
+#### `git_user_email -> str | None`
+
+Provide the initial `user.email` setting for `gitconfig`.
+If `None`, `user.email` will inherit its value from `default_config`,
+so most probably from `default_git_user_email` if not overridden.
+
+#### `git_init_default_branch -> str | None`
+
+Provide the initial `init.defaultBranch` setting for `gitconfig`.
+If `None`, `init.defaultBranch` will inherit its value from `default_config`,
+so most probably `default_git_init_default_branch` if not overridden.
+
+### Session-scoped
+
+#### `defalt_gitconfig -> pytest_gitconfig.GitConfig`
 
 This is the main fixture which is creating a new and clean git config file for the test session.
+It is loaded automatically if you have `pytest-gitconfig` installed.
 
 By default, it will set 3 settings:
 
@@ -95,30 +125,44 @@ By default, it will set 3 settings:
 - `user.email`
 - `init.defaultBranch`
 
-The fixture when required provide a `pytest_gitconfig.GitConfig` object with the following methods:
-
-- `gitconfig.set()` accepting either a `dict` or kwargs, as parsed data sections as dict or dotted-key-values.
-- `gitconfig.get()` to get a setting given its dotted key. Get a 2nd default value. Raise `KeyError` if config does not exists and `default` is not provided
-- `gitconfig.override()` a context manager setting the values and restoring them on exit
-
 It works by monkeypatching the `GIT_CONFIG_GLOBAL` environment variable.
 So, if you rely on this in a context where `os.environ` is ignored, you should patch it yourself using this fixture.
 
-### `git_user_name -> str`
+#### `default_git_user_name -> str`
 
 Provide the initial `user.name` setting. By default `pytest_gitconfig.DEFAULT_GIT_USER_NAME`.
 Override to provide a different initial value.
 
-### `git_user_email -> str`
+#### `default_git_user_email -> str`
 
 Provide the initial `user.email` setting. By default `pytest_gitconfig.DEFAULT_GIT_USER_EMAIL`.
 Override to provide a different initial value.
 
-### `git_init_default_branch -> str`
+#### `default_git_init_default_branch -> str`
 
 Provide the initial `init.defaultBranch` setting. By default `pytest_gitconfig.DEFAULT_GIT_BRANCH` (`main`).
 Override to provide a different initial value.
 
-### `sessionpatch -> pytest.MonkeyPatch`
+#### `sessionpatch -> pytest.MonkeyPatch`
 
 A `pytest.MonkeyPatch` session instance.
+
+## API
+
+### `pytest_gitconfig.GitConfig`
+
+An object materializing a given `gitconfig` file.
+
+#### `set(self, data: Mapping[str, Any] | None = None, **kwargs: Any)`
+
+Write some `gitconfig` values.
+It accepts either a `dict` or kwargs, as parsed data sections as dict or dotted-key-values.
+
+#### `get(self, key: str, default: Any = _UNSET)`
+
+Get a setting given its dotted key. Get a 2nd default value. Raise `KeyError` if config does not exists and `default` is not provided
+
+#### `override(self, data: Mapping[str, Any] | None = None, **kwargs: Any) -> Iterator[GitConfig]`
+
+A context manager setting the values and restoring them on exit.
+Accept the same format a the `set()` method.
