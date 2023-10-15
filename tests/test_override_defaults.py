@@ -10,6 +10,8 @@ USER_NAME = "Overridden user Name"
 USER_EMAIL = "hello@nowhere.com"
 DEFAULT_BRANCH = "master"
 
+pytestmark = pytest.mark.mypy_testing
+
 
 @pytest.fixture(scope="session")
 def git_env_var(sessionpatch: pytest.MonkeyPatch):
@@ -31,7 +33,6 @@ def git_init_default_branch() -> str:
     return DEFAULT_BRANCH
 
 
-@pytest.mark.mypy_testing
 def test_gitconfig_fixture_override(gitconfig: GitConfig):
     assert gitconfig.get("user.name") == USER_NAME
     assert gitconfig.get("user.email") == USER_EMAIL
