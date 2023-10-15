@@ -1,5 +1,16 @@
 # Changelog
 
+## 🚀 0.6.0 (2023-10-15)
+
+### 💫 New features
+
+- add a `GitConfig.override()` context manager setting values
+- support a 2nd `get()` parameter as default value if the key is not found in git config
+
+### 📖 Documentation
+
+- **README**: improve README documentation until we have a decent RTFD ref documentation
+
 ## 🚀 0.5.0 (2023-10-14)
 
 ### 💫 New features
