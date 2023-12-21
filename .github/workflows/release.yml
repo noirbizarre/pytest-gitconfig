@@ -61,7 +61,7 @@ jobs:
           debug: true
 
       - name: Wait for CI tests to succeed
-        uses: lewagon/wait-on-check-action@v1.3.1
+        uses: lewagon/wait-on-check-action@v1.3.3
         with:
           ref: ${{ env.REVISION }}
           running-workflow-name: CI
