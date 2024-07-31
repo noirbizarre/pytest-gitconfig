@@ -142,17 +142,17 @@ By default, it will set 3 settings:
 It works by monkeypatching the `GIT_CONFIG_GLOBAL` environment variable.
 So, if you rely on this in a context where `os.environ` is ignored, you should patch it yourself using this fixture.
 
-#### `default_git_user_name -> str`
+#### `default_git_user_name -> str | UnsetType`
 
 Provide the initial `user.name` setting. By default `pytest_gitconfig.DEFAULT_GIT_USER_NAME`.
 Override to provide a different initial value.
 
-#### `default_git_user_email -> str`
+#### `default_git_user_email -> str | UnsetType`
 
 Provide the initial `user.email` setting. By default `pytest_gitconfig.DEFAULT_GIT_USER_EMAIL`.
 Override to provide a different initial value.
 
-#### `default_git_init_default_branch -> str`
+#### `default_git_init_default_branch -> str | UnsetType`
 
 Provide the initial `init.defaultBranch` setting. By default `pytest_gitconfig.DEFAULT_GIT_BRANCH` (`main`).
 Override to provide a different initial value.
@@ -172,7 +172,7 @@ An object materializing a given `gitconfig` file.
 Write some `gitconfig` values.
 It accepts a `dict` of parsed data sections as dict or dotted-key-values.
 
-#### `get(self, key: str, default: Any = _UNSET)`
+#### `get(self, key: str, default: Any = UNSET)`
 
 Get a setting given its dotted key. Get a 2nd default value. Raise `KeyError` if config does not exists and `default` is not provided
 
