@@ -55,9 +55,12 @@ def fixture_depending_on_default_gitconfig(default_gitconfig: GitConfig) -> What
     return whatever
 ```
 
-Note that the `default_gitconfig` fixture is session-scoped (avoiding the performance hit of creating a Git config file for each test),
-so set values are persistent for the whole session and should be defined once, preferably in your `conftest.py`.
-But if you need to temporarily override some value, you can use the `override()` context manager which accepts the same parameters as `set()`.
+Note that the `default_gitconfig` fixture is Session-scoped
+(avoiding the performance hit of creating a Git config file for each test),
+so set values are persistent for the whole session and should be defined once,
+preferably in your `conftest.py`.
+But if you need to temporarily override some value,
+you can use the `override()` context manager which accepts the same parameters as `set()`.
 
 This allows to override it directly during a test:
 
@@ -75,7 +78,8 @@ def test_something(default_gitconfig: GitConfig):
         # Do something depending on those overridden values
 ```
 
-But to test some value in some specific tests, it's best to rely on the function-scoped `gitconfig` fixture providing the Git config:
+But to test some value in some specific tests,
+it's best to rely on the function-scoped `gitconfig` fixture providing the Git config:
 
 ```python
 from __future__ import annotations
