@@ -14,6 +14,10 @@ trim_trailing_whitespace = true
 indent_size = 4
 max_line_length = 110
 
+[pyproject.toml]
+# Hardcoded by most tool
+indent_size = 4
+
 [*.{yml,yaml,toml,json,jsonc,json5,hjson,ini}]
 indent_size = 2
 

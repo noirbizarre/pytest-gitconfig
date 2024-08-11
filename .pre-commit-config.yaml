@@ -1,16 +1,14 @@
-ci:
-  autoupdate_schedule: weekly
-  autoupdate_commit_msg: 'ci(pre-commit): pre-commit.ci autoupdate'
-  autofix_commit_msg: 'ci(pre-commit): pre-commit.ci autofixes'
-
 default_install_hook_types:
   - pre-commit
   - commit-msg
   - pre-push
+  - post-checkout
+  - post-merge
 
 default_stages:
-  - commit
-  - push
+  - pre-commit
+
+exclude: ^CHANGELOG\.md$
 
 repos:
   - repo: meta
@@ -32,44 +30,47 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/pdm-project/pdm
-    rev: 2.9.3
+    rev: 2.17.3
     hooks:
       - id: pdm-lock-check
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: 3.10.0
+    rev: v3.29.0
     hooks:
       - id: commitizen
         additional_dependencies:
           - emotional
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.27.0
+    rev: 0.29.0
     hooks:
       - id: check-github-workflows
       - id: check-dependabot
 
-  - repo: https://github.com/psf/black
-    rev: 23.9.1
-    hooks:
-      - id: black
-
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.292
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.7
     hooks:
       - id: ruff
+        args: [--fix]
+      - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.0
+    rev: v1.11.1
     hooks:
       - id: mypy
         exclude: docs/.*\.pyi?$
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.3.0
     hooks:
     - id: codespell
       additional_dependencies:
         - tomli
       args: ["--write-changes"]
-      exclude: CHANGELOG\.md
+      exclude: ^pdm\.lock$
+
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.13.0
+    hooks:
+    - id: markdownlint-cli2
+      args: ["--fix"]
