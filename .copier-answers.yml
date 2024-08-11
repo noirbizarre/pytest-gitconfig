@@ -5,7 +5,7 @@ author_email: noirbizarre@gmail.com
 author_fullname: Axel Haustant
 author_username: noirbizarre
 copyright_license: MIT License
-project_description: Provide a gitconfig sandbox for testing
+project_description: Provide a Git config sandbox for testing
 project_name: pytest-gitconfig
 project_slug: pytest-gitconfig
 python_distribution: pytest-gitconfig
