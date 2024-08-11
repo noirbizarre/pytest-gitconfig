@@ -7,7 +7,7 @@ from configparser import ConfigParser
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterator, Mapping
+from typing import Any, Iterator, Mapping, NewType
 
 import pytest
 
@@ -15,7 +15,8 @@ DEFAULT_GIT_USER_NAME = "Pytest"
 DEFAULT_GIT_USER_EMAIL = "pytest@local.dev"
 DEFAULT_GIT_BRANCH = "main"
 
-_UNSET = object()
+UnsetType = NewType("UnsetType", object)
+UNSET = UnsetType(object())
 DELETE = object()
 
 
@@ -26,32 +27,32 @@ def sessionpatch() -> Iterator[pytest.MonkeyPatch]:
 
 
 @pytest.fixture(scope="session")
-def default_git_user_name() -> str:
+def default_git_user_name() -> str | UnsetType:
     return DEFAULT_GIT_USER_NAME
 
 
 @pytest.fixture(scope="session")
-def default_git_user_email() -> str:
+def default_git_user_email() -> str | UnsetType:
     return DEFAULT_GIT_USER_EMAIL
 
 
 @pytest.fixture(scope="session")
-def default_git_init_default_branch() -> str:
+def default_git_init_default_branch() -> str | UnsetType:
     return DEFAULT_GIT_BRANCH
 
 
 @pytest.fixture(scope="session")
-def git_user_name() -> str | None:
+def git_user_name() -> str | None | UnsetType:
     pass
 
 
 @pytest.fixture(scope="session")
-def git_user_email() -> str | None:
+def git_user_email() -> str | None | UnsetType:
     pass
 
 
 @pytest.fixture(scope="session")
-def git_init_default_branch() -> str | None:
+def git_init_default_branch() -> str | None | UnsetType:
     pass
 
 
@@ -67,19 +68,19 @@ class GitConfig:
         for section, option, value in self._iter_data(data):
             if not cfg.has_section(section):
                 cfg.add_section(section)
-            if value is DELETE:
+            if value is DELETE or value is UNSET:
                 cfg.remove_option(section, option)
             else:
                 cfg.set(section, option, value)
         self._write(cfg)
 
-    def get(self, key: str, default: Any = _UNSET) -> str:
+    def get(self, key: str, default: Any = UNSET) -> str:
         cfg = self._read()
         section, option = self._parse_key(key)
         try:
             return cfg[section][option]
         except KeyError as e:
-            if default is _UNSET:
+            if default is UNSET:
                 raise KeyError(f"Key {section}.{option} not found in git config") from e
             return default
 
@@ -123,9 +124,9 @@ class GitConfig:
 def default_gitconfig(
     tmp_path_factory: pytest.TempPathFactory,
     sessionpatch: pytest.MonkeyPatch,
-    default_git_user_name: str,
-    default_git_user_email: str,
-    default_git_init_default_branch: str,
+    default_git_user_name: str | UnsetType,
+    default_git_user_email: str | UnsetType,
+    default_git_init_default_branch: str | UnsetType,
 ) -> GitConfig:
     path = tmp_path_factory.mktemp("git", False) / "config"
     gitconfig = GitConfig(path)
