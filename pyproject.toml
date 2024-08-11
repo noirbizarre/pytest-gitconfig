@@ -1,6 +1,6 @@
 [project]
 name = "pytest-gitconfig"
-description = "Provide a gitconfig sandbox for testing"
+description = "Provide a Git config sandbox for testing"
 authors = [
     {name = "Axel Haustant", email = "noirbizarre@gmail.com"},
 ]
