@@ -6,6 +6,7 @@ from .plugin import (
     DEFAULT_GIT_BRANCH,
     DEFAULT_GIT_USER_EMAIL,
     DEFAULT_GIT_USER_NAME,
+    UNSET,
     GitConfig,
 )
 
