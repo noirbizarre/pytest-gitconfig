@@ -1,5 +1,24 @@
 # Changelog
 
+## 🚀 0.7.0 (2024-08-11)
+
+### 💫 New features
+
+- add support for unsetting config values via override fixtures
+
+### 🐛 Bug fixes
+
+- **typing**: expose `UNSET` type at root leel
+
+### 📖 Documentation
+
+- fix typos and enhance
+
+### 📦 Build
+
+- update the build stack
+
+
 ## 🚀 0.6.0 (2023-10-15)
 
 ### 💫 New features
