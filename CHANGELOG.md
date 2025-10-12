@@ -1,5 +1,16 @@
 # Changelog
 
+## 🚀 0.8.0 (2025-10-12)
+
+### 🚨 Breaking changes
+
+- update the stack, drop support for Python 3.8 and 3.9, add support for Python 3.13 and 3.14 ([#17](https://github.com/noirbizarre/pytest-gitconfig/issues/17))
+
+### 📦 Build
+
+- **pyproject**: use PEP 639 `license` and `license-file` (fix [#15](https://github.com/noirbizarre/pytest-gitconfig/issues/15))
+
+
 ## 🚀 0.7.0 (2024-08-11)
 
 ### 💫 New features
