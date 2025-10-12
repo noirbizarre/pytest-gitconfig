@@ -9,7 +9,7 @@ license = "MIT"
 license-files = [
   "LICENSE",
 ]
-requires-python = ">=3.8.1"
+requires-python = ">=3.10"
 keywords = []
 dynamic = ["version"]
 classifiers = [
@@ -18,11 +18,11 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Typing :: Typed",
 ]
 
@@ -46,18 +46,18 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 
 
-[tool.pdm.version]
-source = "scm"
-write_to = "pytest_gitconfig/VERSION"
-
-
-[tool.pdm.dev-dependencies]
+[dependency-groups]
+dev = [
+    {include-group = "test"},
+    {include-group = "lint"},
+    {include-group = "docs"},
+    "tox>=4.22",
+    "tox-pdm>=0.5",
+]
 test = [
     "coverage[toml]>=4",
     "pytest-sugar>=0.9.5",
     "pytest-mypy-testing>=0.1.1",
-    "tox",
-    "tox-pdm>=0.5",
 ]
 lint = [
     "codespell>=2.3.0",
@@ -67,6 +67,18 @@ lint = [
 docs = [
     "emotional",
 ]
+
+
+[tool.pdm]
+distribution = true
+plugins = [
+    "sync-pre-commit-lock>=0.7.0",
+]
+
+
+[tool.pdm.version]
+source = "scm"
+write_to = "pytest_gitconfig/VERSION"
 
 
 [tool.pdm.scripts]
