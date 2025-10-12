@@ -3,11 +3,12 @@ from __future__ import annotations
 import os
 import shutil
 
+from collections.abc import Iterator, Mapping
 from configparser import ConfigParser
 from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterator, Mapping, NewType
+from typing import Any, NewType
 
 import pytest
 
