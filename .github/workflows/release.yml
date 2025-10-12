@@ -65,7 +65,7 @@ jobs:
           token: ${{ secrets.PAT }}
 
       - name: Publish on PyPI
-        run: pdm publish --no-build
+        uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Publish summary
         run: |
