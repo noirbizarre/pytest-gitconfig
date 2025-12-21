@@ -52,7 +52,6 @@ dev = [
     {include-group = "lint"},
     {include-group = "docs"},
     "tox>=4.22",
-    "tox-pdm>=0.5",
 ]
 test = [
     "coverage[toml]>=4",
