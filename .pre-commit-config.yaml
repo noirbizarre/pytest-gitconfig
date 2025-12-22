@@ -35,27 +35,27 @@ repos:
       - id: pdm-lock-check
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.9.1
+    rev: v4.10.0
     hooks:
       - id: commitizen
         additional_dependencies:
           - emotional==0.5.1
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.34.0
+    rev: 0.36.0
     hooks:
       - id: check-github-workflows
       - id: check-dependabot
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.0
+    rev: v0.14.10
     hooks:
       - id: ruff
         args: [--fix]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.18.2
+    rev: v1.19.1
     hooks:
       - id: mypy
         exclude: docs/.*\.pyi?$
@@ -70,7 +70,7 @@ repos:
       exclude: ^pdm\.lock$
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.18.1
+    rev: v0.20.0
     hooks:
     - id: markdownlint-cli2
       args: ["--fix"]
