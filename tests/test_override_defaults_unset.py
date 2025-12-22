@@ -12,8 +12,6 @@ from pytest_gitconfig import (
 )
 from pytest_gitconfig.plugin import UNSET, UnsetType
 
-pytestmark = pytest.mark.mypy_testing
-
 
 @pytest.fixture
 def git_user_name() -> str | UnsetType:

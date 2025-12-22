@@ -10,8 +10,6 @@ USER_NAME = "Overridden user Name"
 USER_EMAIL = "hello@nowhere.com"
 DEFAULT_BRANCH = "any_branch"
 
-pytestmark = pytest.mark.mypy_testing
-
 
 @pytest.fixture
 def git_user_name() -> str:

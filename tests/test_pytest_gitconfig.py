@@ -10,8 +10,6 @@ import pytest
 
 from pytest_gitconfig import GitConfig
 
-pytestmark = pytest.mark.mypy_testing
-
 _GIT_CONFIG = ["git", "config", "--global"]
 
 

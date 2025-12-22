@@ -54,9 +54,9 @@ dev = [
     "tox>=4.22",
 ]
 test = [
+    "pytest>=9.0.0",  # For the new syntax
     "coverage[toml]>=4",
     "pytest-sugar>=0.9.5",
-    "pytest-mypy-testing>=0.1.1",
 ]
 lint = [
     "codespell>=2.3.0",
@@ -103,7 +103,6 @@ typing.help = "Full typing linting (includes imported packages and uncommmited f
 typing.cmd = "mypy src tests --warn-unused-ignores"
 
 cover.help = "Run the test suite with coverage"
-pre_cover = "coverage erase"
 cover.composite = [
   "coverage run --append -m pytest {args} --junitxml=reports/tests.xml",
   "coverage report",
@@ -111,9 +110,9 @@ cover.composite = [
   "coverage xml -o reports/coverage.xml",
 ]
 cover.env = {COV_CORE_SOURCE="src"}
+pre_cover = "coverage erase"
 
 "cover:all".help = "Run the test suite against all supported Python version"
-"pre_cover:all" = "coverage erase"
 "cover:all".cmd = "tox --parallel"
 
 changelog.help = "Update the changelog"
@@ -128,9 +127,9 @@ version_provider = "scm"
 major_version_zero = true  # Remove this line for the first 1.x release
 
 
-[tool.pytest.ini_options]
-addopts = "-ra"
-norecursedirs = ".git build dist"
+[tool.pytest]
+addopts = ["-ra"]
+norecursedirs = [".git", "build", "dist"]
 testpaths = [
   "src/",
   "tests/",
@@ -142,6 +141,13 @@ source = ["src/"]
 branch = true
 omit = [
   "tests/*",
+]
+relative_files = true
+
+[tool.coverage.paths]
+source = [
+    "src/",
+    ".tox/*/lib/*/site-packages/",
 ]
 
 [tool.coverage.report]
