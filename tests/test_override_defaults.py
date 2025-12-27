@@ -26,7 +26,7 @@ def git_init_default_branch() -> str:
     return DEFAULT_BRANCH
 
 
-def test_gitconfig_fixture_override_defaults(
+def test_function_fixtures_dont_override_ession_scoped_defaults(
     default_gitconfig: GitConfig,
     default_git_user_name: str,
     default_git_user_email: str,
@@ -35,6 +35,9 @@ def test_gitconfig_fixture_override_defaults(
     assert default_gitconfig.get("user.name") == default_git_user_name
     assert default_gitconfig.get("user.email") == default_git_user_email
     assert default_gitconfig.get("init.defaultBranch") == default_git_init_default_branch
+    assert default_git_user_name != USER_NAME
+    assert default_git_user_email != USER_EMAIL
+    assert default_git_init_default_branch != DEFAULT_BRANCH
     assert "GIT_WHATEVER" not in os.environ
 
 

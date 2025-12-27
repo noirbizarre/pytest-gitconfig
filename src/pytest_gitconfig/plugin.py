@@ -42,19 +42,19 @@ def default_git_init_default_branch() -> str | UnsetType:
     return DEFAULT_GIT_BRANCH
 
 
-@pytest.fixture(scope="session")
-def git_user_name() -> str | None | UnsetType:
-    pass
+@pytest.fixture
+def git_user_name(default_git_user_name: str) -> str | UnsetType:
+    return default_git_user_name
 
 
-@pytest.fixture(scope="session")
-def git_user_email() -> str | None | UnsetType:
-    pass
+@pytest.fixture
+def git_user_email(default_git_user_email) -> str | UnsetType:
+    return default_git_user_email
 
 
-@pytest.fixture(scope="session")
-def git_init_default_branch() -> str | None | UnsetType:
-    pass
+@pytest.fixture
+def git_init_default_branch(default_git_init_default_branch) -> str | UnsetType:
+    return default_git_init_default_branch
 
 
 @dataclass
@@ -121,7 +121,7 @@ class GitConfig:
             cfg.write(out)
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session")
 def default_gitconfig(
     tmp_path_factory: pytest.TempPathFactory,
     sessionpatch: pytest.MonkeyPatch,

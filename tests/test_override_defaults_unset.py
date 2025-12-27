@@ -4,12 +4,7 @@ import os
 
 import pytest
 
-from pytest_gitconfig import (
-    DEFAULT_GIT_BRANCH,
-    DEFAULT_GIT_USER_EMAIL,
-    DEFAULT_GIT_USER_NAME,
-    GitConfig,
-)
+from pytest_gitconfig import GitConfig
 from pytest_gitconfig.plugin import UNSET, UnsetType
 
 
@@ -28,10 +23,15 @@ def git_init_default_branch() -> str | UnsetType:
     return UNSET
 
 
-def test_gitconfig_fixture_override_defaults(default_gitconfig: GitConfig):
-    assert default_gitconfig.get("user.name") == DEFAULT_GIT_USER_NAME
-    assert default_gitconfig.get("user.email") == DEFAULT_GIT_USER_EMAIL
-    assert default_gitconfig.get("init.defaultBranch") == DEFAULT_GIT_BRANCH
+def test_gitconfig_fixture_override_defaults(
+    default_gitconfig: GitConfig,
+    default_git_user_name: str,
+    default_git_user_email: str,
+    default_git_init_default_branch: str,
+):
+    assert default_gitconfig.get("user.name") == default_git_user_name
+    assert default_gitconfig.get("user.email") == default_git_user_email
+    assert default_gitconfig.get("init.defaultBranch") == default_git_init_default_branch
     assert "GIT_WHATEVER" not in os.environ
 
 
