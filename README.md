@@ -37,7 +37,7 @@ if TYPE_CHECKING:
     from pytest_gitconfig import GitConfig
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def default_git_user_name() -> str:
   return "John Doe"
 
