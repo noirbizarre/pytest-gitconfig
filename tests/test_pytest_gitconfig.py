@@ -93,6 +93,14 @@ def test_gitconfig_set_nested_dicts(gitconfig: GitConfig):
     assert get_config("test.nestedDicts") == expected
 
 
+def test_gitconfig_set_mixed_dict(gitconfig: GitConfig):
+    expected = "expected"
+    gitconfig.set({"test.dottedDict": expected, "test": {"nestedDicts": expected}})
+
+    assert get_config("test.dottedDict") == expected
+    assert get_config("test.nestedDicts") == expected
+
+
 def test_gitconfig_set_key_value(gitconfig: GitConfig):
     expected = "expected"
     gitconfig.set("test.dottedDict", expected)
