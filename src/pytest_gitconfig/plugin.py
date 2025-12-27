@@ -87,6 +87,9 @@ class GitConfig:
                 raise KeyError(f"Key {section}.{option} not found in git config") from e
             return default
 
+    def delete(self, key: str):
+        self.set(key, UNSET)
+
     @contextmanager
     def override(self, data: Mapping[str, Any]) -> Iterator[GitConfig]:
         keys = {f"{section}.{option}" for section, option, _ in self._iter_data(data)}

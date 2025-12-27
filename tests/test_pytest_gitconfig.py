@@ -100,6 +100,14 @@ def test_gitconfig_set_key_value(gitconfig: GitConfig):
     assert get_config("test.dottedDict") == expected
 
 
+def test_gitconfig_delete_key(gitconfig: GitConfig):
+    gitconfig.delete("init.defaultBranch")
+
+    assert get_config("init.defaultBranch") is None
+    with pytest.raises(KeyError):
+        gitconfig.get("init.defaultBranch")
+
+
 def test_gitconfig_override_existing_value(gitconfig: GitConfig):
     expected = "new name"
     initial = get_config("user.name")
