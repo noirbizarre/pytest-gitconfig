@@ -59,12 +59,21 @@ def git_init_default_branch(default_git_init_default_branch) -> str | UnsetType:
 
 @dataclass
 class GitConfig:
+    """A gitconfig file wrapper for reading and writing git config settings."""
+
     path: Path
 
     def __str__(self):
         return str(self.path)
 
     def set(self, data: Mapping[str, Any] | str, value: Any = UNSET):
+        """
+        Set git config values, either from a mapping or a single key-value pair.
+
+        Args:
+            data: A mapping of git config keys to values, or a single key as a string.
+            value: The value to set for the single key, if `data` is a string
+        """
         if isinstance(data, str):
             data = {data: value}
         cfg = self._read()
@@ -78,6 +87,19 @@ class GitConfig:
         self._write(cfg)
 
     def get(self, key: str, default: Any = UNSET) -> str:
+        """
+        Get a git config value by key.
+
+        Args:
+            key: The git config key in the form of <section>.<option>.
+            default: The default value to return if the key is not found.
+
+        Raises:
+            KeyError: If the key is not found and no default is provided.
+
+        Returns:
+            The git config value if found, otherwise the default value.
+        """
         cfg = self._read()
         section, option = self._parse_key(key)
         try:
@@ -88,10 +110,19 @@ class GitConfig:
             return default
 
     def delete(self, key: str):
+        """
+        Delete a git config key.
+
+        Args:
+            key: The git config key in the form of <section>.<option>.
+        """
         self.set(key, UNSET)
 
     @contextmanager
     def override(self, data: Mapping[str, Any]) -> Iterator[GitConfig]:
+        """
+        Temporarily override git config settings within a context.
+        """
         keys = {f"{section}.{option}" for section, option, _ in self._iter_data(data)}
         backup = {key: self.get(key, DELETE) for key in keys}
         self.set(data)
