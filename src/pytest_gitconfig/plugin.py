@@ -64,7 +64,9 @@ class GitConfig:
     def __str__(self):
         return str(self.path)
 
-    def set(self, data: Mapping[str, Any]):
+    def set(self, data: Mapping[str, Any] | str, value: Any = UNSET):
+        if isinstance(data, str):
+            data = {data: value}
         cfg = self._read()
         for section, option, value in self._iter_data(data):
             if not cfg.has_section(section):
