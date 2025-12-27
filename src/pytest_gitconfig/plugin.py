@@ -121,7 +121,7 @@ class GitConfig:
             cfg.write(out)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def default_gitconfig(
     tmp_path_factory: pytest.TempPathFactory,
     sessionpatch: pytest.MonkeyPatch,

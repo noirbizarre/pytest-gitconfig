@@ -10,8 +10,9 @@ def git_env_var(sessionpatch: pytest.MonkeyPatch):
     sessionpatch.setenv("GIT_WHATEVER", "whatever")
 
 
+# HACK: we add the git_env_var fixture as a dependency to ensure it is applied before
 @pytest.fixture(scope="session")
-def default_git_user_name() -> str:
+def default_git_user_name(git_env_var) -> str:
     return "default user"
 
 
