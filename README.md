@@ -137,6 +137,10 @@ Provide the initial `init.defaultBranch` setting for `gitconfig`.
 If `None`, `init.defaultBranch` will inherit its value from `default_config`,
 so most probably `default_git_init_default_branch` if not overridden.
 
+#### `set_gitconfig -> Mapping[str, str | UnsetType]`
+
+Set some git config settings for `gitconfig`.
+
 ### Session-scoped
 
 #### `default_gitconfig -> pytest_gitconfig.GitConfig`
@@ -167,6 +171,10 @@ Override to provide a different initial value.
 
 Provide the initial `init.defaultBranch` setting. By default `pytest_gitconfig.DEFAULT_GIT_BRANCH` (`main`).
 Override to provide a different initial value.
+
+#### `set_default_gitconfig -> Mapping[str, str | UnsetType]`
+
+Set some git config settings for `default_gitconfig`.
 
 #### `sessionpatch -> pytest.MonkeyPatch`
 

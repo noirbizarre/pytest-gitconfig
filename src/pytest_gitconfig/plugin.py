@@ -42,19 +42,29 @@ def default_git_init_default_branch() -> str | UnsetType:
     return DEFAULT_GIT_BRANCH
 
 
-@pytest.fixture
-def git_user_name(default_git_user_name: str) -> str | UnsetType:
-    return default_git_user_name
+@pytest.fixture(scope="session")
+def set_default_gitconfig() -> Mapping[str, str | UnsetType]:
+    return {}
 
 
 @pytest.fixture
-def git_user_email(default_git_user_email) -> str | UnsetType:
-    return default_git_user_email
+def git_user_name() -> str | UnsetType | None:
+    pass
 
 
 @pytest.fixture
-def git_init_default_branch(default_git_init_default_branch) -> str | UnsetType:
-    return default_git_init_default_branch
+def git_user_email() -> str | UnsetType | None:
+    pass
+
+
+@pytest.fixture
+def git_init_default_branch() -> str | UnsetType | None:
+    pass
+
+
+@pytest.fixture
+def set_gitconfig() -> Mapping[str, str | UnsetType]:
+    return {}
 
 
 @dataclass
@@ -164,6 +174,7 @@ def default_gitconfig(
     default_git_user_name: str | UnsetType,
     default_git_user_email: str | UnsetType,
     default_git_init_default_branch: str | UnsetType,
+    set_default_gitconfig: Mapping[str, str | UnsetType],
 ) -> GitConfig:
     path = tmp_path_factory.mktemp("git", False) / "config"
     gitconfig = GitConfig(path)
@@ -180,6 +191,8 @@ def default_gitconfig(
     }
 
     gitconfig.set(settings)
+    if set_default_gitconfig:
+        gitconfig.set(set_default_gitconfig)
 
     return gitconfig
 
@@ -192,6 +205,7 @@ def gitconfig(
     git_user_name: str | None,
     git_user_email: str | None,
     git_init_default_branch: str | None,
+    set_gitconfig: Mapping[str, str | UnsetType],
 ) -> GitConfig:
     path = tmp_path / "gitconfig"
     shutil.copy(default_gitconfig.path, path)
@@ -211,5 +225,7 @@ def gitconfig(
 
     if settings:
         gitconfig.set(settings)
+    if set_gitconfig:
+        gitconfig.set(set_gitconfig)
 
     return gitconfig
