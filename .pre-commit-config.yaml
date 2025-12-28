@@ -30,16 +30,16 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/pdm-project/pdm
-    rev: 2.26.2
+    rev: 2.26.3
     hooks:
       - id: pdm-lock-check
 
   - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.9.1
+    rev: v4.10.1
     hooks:
       - id: commitizen
         additional_dependencies:
-          - emotional==0.5.1
+          - emotional==0.6.0
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.36.0
@@ -48,14 +48,14 @@ repos:
       - id: check-dependabot
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.0
+    rev: v0.14.10
     hooks:
       - id: ruff
         args: [--fix]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.18.2
+    rev: v1.19.1
     hooks:
       - id: mypy
         exclude: docs/.*\.pyi?$

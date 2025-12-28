@@ -62,9 +62,10 @@ lint = [
     "codespell>=2.3.0",
     "mypy>=1.11.0",
     "ruff>=0.5.5",
+    "prek",
 ]
 docs = [
-    "emotional",
+    "emotional>=0.6.0",
 ]
 
 
@@ -89,7 +90,7 @@ test.cmd = "pytest"
 
 
 lint.help = "Lint all tracked files using pre-commit"
-lint.cmd = "pre-commit run --all-files"
+lint.cmd = "prek run --all-files"
 
 format.help = "Format the code according to known rules"
 format.composite = [
