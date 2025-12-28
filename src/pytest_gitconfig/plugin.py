@@ -84,6 +84,8 @@ class GitConfig:
             data: A mapping of git config keys to values, or a single key as a string.
             value: The value to set for the single key, if `data` is a string
         """
+        __tracebackhide__ = True
+
         if isinstance(data, str):
             data = {data: value}
         cfg = self._read()
@@ -110,6 +112,8 @@ class GitConfig:
         Returns:
             The git config value if found, otherwise the default value.
         """
+        __tracebackhide__ = True
+
         cfg = self._read()
         section, option = self._parse_key(key)
         try:
@@ -126,6 +130,8 @@ class GitConfig:
         Args:
             key: The git config key in the form of <section>.<option>.
         """
+        __tracebackhide__ = True
+
         self.set(key, UNSET)
 
     @contextmanager
