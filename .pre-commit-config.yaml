@@ -42,7 +42,7 @@ repos:
           - emotional==0.5.1
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.34.0
+    rev: 0.36.0
     hooks:
       - id: check-github-workflows
       - id: check-dependabot
@@ -70,7 +70,7 @@ repos:
       exclude: ^pdm\.lock$
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
-    rev: v0.18.1
+    rev: v0.20.0
     hooks:
     - id: markdownlint-cli2
       args: ["--fix"]
