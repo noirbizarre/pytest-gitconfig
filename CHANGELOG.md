@@ -1,5 +1,33 @@
 # Changelog
 
+## 🚀 0.9.0 (2025-12-28)
+
+### 💫 New features
+
+- **gitconfig**: added `delete(key)` method
+- **gitconfig**: allow using `.set(key, value)` form
+- **set**: add `set_default_gitconfig` and `set_config` to set multiple settings at once
+
+### 🐛 Bug fixes
+
+- **fixtures**: ensure function-scoped fixtures inherit the session-scoped fixtures values
+- restore the default_gitconfig autouse but trick pytest to have `git_env_var` set before (for testing purpose)
+
+### 📖 Documentation
+
+- **gitconfig**: added some docstrings to the public methods
+- **README**: fix the example fixture scope
+
+### 📦 Build
+
+- **tox**: drop `tox-pdm` and rely on `dependency-groups`
+- use uv as dependency resolver
+
+### 🧹 Chores
+
+- hide some traceback to clean stacktraces
+
+
 ## 🚀 0.8.0 (2025-10-12)
 
 ### 🚨 Breaking changes
