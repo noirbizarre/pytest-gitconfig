@@ -74,7 +74,7 @@ if TYPE_CHECKING:
 
 
 def test_something(default_gitconfig: GitConfig):
-    with gitconfig.override({"other.key": value}):
+    with default_gitconfig.override({"other.key": value}):
         # Do something depending on those overridden values
 ```
 
