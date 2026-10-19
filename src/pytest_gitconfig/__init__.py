@@ -4,9 +4,17 @@ from pathlib import Path
 
 from .plugin import (
     DEFAULT_GIT_BRANCH as DEFAULT_GIT_BRANCH,
+)
+from .plugin import (
     DEFAULT_GIT_USER_EMAIL as DEFAULT_GIT_USER_EMAIL,
+)
+from .plugin import (
     DEFAULT_GIT_USER_NAME as DEFAULT_GIT_USER_NAME,
+)
+from .plugin import (
     UNSET as UNSET,
+)
+from .plugin import (
     GitConfig as GitConfig,
 )
 
