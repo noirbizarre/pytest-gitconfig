@@ -39,14 +39,14 @@ if TYPE_CHECKING:
 
 @pytest.fixture(scope="session")
 def default_git_user_name() -> str:
-  return "John Doe"
+    return "John Doe"
 
 
 @pytest.fixture(scope="session", autouse=True)
 def fixture_depending_on_default_gitconfig(default_gitconfig: GitConfig) -> Whatever:
     # You can set values, the following statements are equivalents
-    default_gitconfig.set({"some": {"key": value}}) # nested dicts form
-    default_gitconfig.set({"some.key": value})      # dict with dotted keys form
+    default_gitconfig.set({"some": {"key": value}})  # nested dicts form
+    default_gitconfig.set({"some.key": value})  # dict with dotted keys form
     # Or read them
     data = default_gitconfig.get("some.key")
     data = default_gitconfig.get("some.key", "fallback")
